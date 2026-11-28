@@ -58,6 +58,9 @@ type Suite struct {
 	wrappers fixturePool
 	headOnce sync.Once
 	headErr  error
+
+	eth74Once sync.Once
+	eth74     eth74State
 }
 
 // NewSuite creates and returns a new eth-test suite that can

@@ -67,6 +67,7 @@ var (
 			rlpxSnap2TestCommand,
 			rlpxEth75TestCommand,
 			rlpxEth75PreForkTestCommand,
+			rlpxEth74TestCommand,
 		},
 	}
 	rlpxPingCommand = &cli.Command{
@@ -135,6 +136,20 @@ var (
 		Usage:     "Runs eth/75 (EIP-8437) tests against a node whose EIP-8288 test chain schedules the fork in the future",
 		ArgsUsage: "",
 		Action:    rlpxEth75PreForkTest,
+		Flags: []cli.Flag{
+			testPatternFlag,
+			testTAPFlag,
+			testChainDirFlag,
+			testNodeFlag,
+			testNodeJWTFlag,
+			testNodeEngineFlag,
+		},
+	}
+	rlpxEth74TestCommand = &cli.Command{
+		Name:      "eth74-test",
+		Usage:     "Runs eth/74 (EIP-8512) dependency proof tests against a node with EIP-8288 and Amsterdam active",
+		ArgsUsage: "",
+		Action:    rlpxEth74Test,
 		Flags: []cli.Flag{
 			testPatternFlag,
 			testTAPFlag,
@@ -237,6 +252,16 @@ func rlpxEth75PreForkTest(ctx *cli.Context) error {
 		exit(err)
 	}
 	return runTests(ctx, suite.Eth75PreForkTests())
+}
+
+// rlpxEth74Test runs the eth/74 (EIP-8512) dependency proof test suite.
+func rlpxEth74Test(ctx *cli.Context) error {
+	p := cliTestParams(ctx)
+	suite, err := ethtest.NewSuite(p.node, p.chainDir, p.engineAPI, p.jwt)
+	if err != nil {
+		exit(err)
+	}
+	return runTests(ctx, suite.Eth74Tests())
 }
 
 type testParams struct {
