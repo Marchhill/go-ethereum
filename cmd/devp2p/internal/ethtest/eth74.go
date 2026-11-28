@@ -467,7 +467,7 @@ func (ec *EngineClient) buildBlock(parent *eth74Header) (common.Hash, error) {
 		ExecutionPayload  json.RawMessage `json:"executionPayload"`
 		ExecutionRequests []hexutil.Bytes `json:"executionRequests"`
 	}
-	if err := ec.rpc("engine_getPayloadV6", &built, fcu.PayloadID); err != nil {
+	if err := ec.rpc("engine_getPayloadV7", &built, fcu.PayloadID); err != nil {
 		return common.Hash{}, err
 	}
 	var payload struct {
@@ -480,7 +480,7 @@ func (ec *EngineClient) buildBlock(parent *eth74Header) (common.Hash, error) {
 		built.ExecutionRequests = []hexutil.Bytes{}
 	}
 	var status engineStatus
-	if err := ec.rpc("engine_newPayloadV5", &status, built.ExecutionPayload, []common.Hash{}, common.Hash{}, built.ExecutionRequests); err != nil {
+	if err := ec.rpc("engine_newPayloadV7", &status, built.ExecutionPayload, []common.Hash{}, common.Hash{}, built.ExecutionRequests, []hexutil.Bytes{}); err != nil {
 		return common.Hash{}, err
 	}
 	if status.Status != "VALID" {
